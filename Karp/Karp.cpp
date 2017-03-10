@@ -64,13 +64,8 @@ void Matcher::InitMatch() {
 		}
 		if (-1 != clean)
 			edges[i].erase(edges[i].begin() + j);
-		//cout << "\nRemoving " << matchLeft[i] << " from edges[" << i << "]\n edges[" << i << "][0]: " << edges[i][0];
 	}
 	delete matched;
-
-	cout << "\nInitial match: ";
-	for (int i = 0; i < n; i++)
-		cout << matchLeft[i] << " ";
 }
 
 bool Matcher::CorrectMatches() {
@@ -91,32 +86,23 @@ bool Matcher::CorrectMatches() {
 	alternatingPath.push_back(currentLeft);
 
 	while (true) {
-		cout << "\nAlternating path: ";
-		for (auto a : alternatingPath)
-			cout << a << " ";
-
 		if (edges[currentLeft].size()) {
-			cout << "\nIn 1st if\n currentLeft: " << currentLeft << "\n edges[currentLeft].size(): " << edges[currentLeft].size()
-				<< "\n edges[currentLeft][0]: " << edges[currentLeft][0];
 			currentRight = edges[currentLeft][0];
 			alternatingPath.push_back(currentRight);
 		}
 		else {
 			//-1 = matching NOT YET found
 			//-2 = matching impossible
-			cout << "\nIn 1st else";
 			matchLeft[alternatingPath[0]] = -2;
 
 			return true;
 		}
 
 		if (-1 != matchRight[currentRight]) {
-			cout << "\nIn 2nd if";
 			currentLeft = matchRight[currentRight];
 			alternatingPath.push_back(currentLeft);
 		}
 		else {
-			cout << "\nIn 2nd else";
 			int size = alternatingPath.size();
 			for (int i = 0; i < size; i += 2) {
 				matchLeft[alternatingPath[i]] = alternatingPath[i + 1];
@@ -166,10 +152,9 @@ int main() {
 	Matcher mat(n, edges);
 	int * match = mat.Match();
 
-	cout << "\nFound match: ";
+	cout << "Found match: ";
 	for (int i = 0; i < n; i++)
 		cout << match[i] << " ";
 
-	cin.get();
 	return 0;
 }
