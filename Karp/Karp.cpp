@@ -87,14 +87,23 @@ bool Matcher::CorrectMatches() {
 
 	while (true) {
 		if (edges[currentLeft].size()) {
+			//loop in ap check
+			for (int i = 0; i < alternatingPath.size(); i++)
+				if (alternatingPath[i] == edges[currentLeft][0] &&
+					1 == i % 2) {
+					//-1 = matching NOT YET found
+					//-2 = matching impossible
+					matchLeft[alternatingPath[0]] = -2;
+
+					return true;
+				}
+
 			currentRight = edges[currentLeft][0];
 			alternatingPath.push_back(currentRight);
 		}
 		else {
-			//-1 = matching NOT YET found
-			//-2 = matching impossible
 			matchLeft[alternatingPath[0]] = -2;
-
+			
 			return true;
 		}
 
@@ -137,17 +146,32 @@ int main() {
 	edges[2].push_back(1);
 	edges[2].push_back(2);*/
 
-	const int n = 5;
+	//const int n = 5;
+	//vector<int> edges[n];
+	//edges[0].push_back(0);
+	//edges[0].push_back(1);
+	//edges[1].push_back(0);
+	//edges[2].push_back(1);
+	//edges[2].push_back(4);
+	//edges[3].push_back(2);
+	//edges[3].push_back(3);
+	//edges[3].push_back(4);
+	//edges[4].push_back(2);
+
+	const int n = 6;
 	vector<int> edges[n];
 	edges[0].push_back(0);
 	edges[0].push_back(1);
 	edges[1].push_back(0);
 	edges[2].push_back(1);
-	edges[2].push_back(4);
+	edges[2].push_back(2);
+	edges[2].push_back(3);
+	edges[3].push_back(1);
 	edges[3].push_back(2);
-	edges[3].push_back(3);
-	edges[3].push_back(4);
 	edges[4].push_back(2);
+	edges[4].push_back(3);
+	edges[5].push_back(2);
+	edges[5].push_back(3);
 
 	Matcher mat(n, edges);
 	int * match = mat.Match();
