@@ -86,20 +86,33 @@ bool Matcher::CorrectMatches() {
 	alternatingPath.push_back(currentLeft);
 
 	while (true) {
-		if (edges[currentLeft].size()) {
+		int esize = edges[currentLeft].size();
+		if (esize) {
 			//loop in ap check
-			for (int i = 0; i < alternatingPath.size(); i++)
-				if (alternatingPath[i] == edges[currentLeft][0] &&
-					1 == i % 2) {
-					//-1 = matching NOT YET found
-					//-2 = matching impossible
-					matchLeft[alternatingPath[0]] = -2;
+			//check if there is a vertex on the right size that is:
+			// connected with current left vertex (== is in edges[currentLeft])
+			// not yed added to alternating path  (== is not in alternatingPath)
+			int notAPVertex = -1;
+			for (auto & p : edges[currentLeft]) {
+				for (auto & q : alternatingPath)
+					if (q == p) break;
+				notAPVertex = p;
+				break;
+			}
 
-					return true;
-				}
+			//failure
+			if (-1 == notAPVertex) {
+				//-1 = matching NOT YET found
+				//-2 = matching impossible
+				matchLeft[alternatingPath[0]] = -2;
+				return true;
+			}
 
-			currentRight = edges[currentLeft][0];
-			alternatingPath.push_back(currentRight);
+			//success
+			if (0 <= notAPVertex) {
+				currentRight = edges[currentLeft][notAPVertex];
+				alternatingPath.push_back(currentRight);
+			}
 		}
 		else {
 			matchLeft[alternatingPath[0]] = -2;
@@ -146,19 +159,19 @@ int main() {
 	edges[2].push_back(1);
 	edges[2].push_back(2);*/
 
-	//const int n = 5;
-	//vector<int> edges[n];
-	//edges[0].push_back(0);
-	//edges[0].push_back(1);
-	//edges[1].push_back(0);
-	//edges[2].push_back(1);
-	//edges[2].push_back(4);
-	//edges[3].push_back(2);
-	//edges[3].push_back(3);
-	//edges[3].push_back(4);
-	//edges[4].push_back(2);
+	/*const int n = 5;
+	vector<int> edges[n];
+	edges[0].push_back(0);
+	edges[0].push_back(1);
+	edges[1].push_back(0);
+	edges[2].push_back(1);
+	edges[2].push_back(4);
+	edges[3].push_back(2);
+	edges[3].push_back(3);
+	edges[3].push_back(4);
+	edges[4].push_back(2);*/
 
-	const int n = 6;
+	/*const int n = 6;
 	vector<int> edges[n];
 	edges[0].push_back(0);
 	edges[0].push_back(1);
@@ -171,7 +184,17 @@ int main() {
 	edges[4].push_back(2);
 	edges[4].push_back(3);
 	edges[5].push_back(2);
-	edges[5].push_back(3);
+	edges[5].push_back(3);*/
+
+	const int n = 3;
+	vector<int> edges[n];
+	edges[0].push_back(0);
+	edges[0].push_back(1);
+	edges[0].push_back(2);
+	edges[1].push_back(0);
+	edges[2].push_back(0);
+	edges[2].push_back(1);
+
 
 	Matcher mat(n, edges);
 	int * match = mat.Match();
@@ -180,5 +203,6 @@ int main() {
 	for (int i = 0; i < n; i++)
 		cout << match[i] << " ";
 
+	cin.get();
 	return 0;
 }
